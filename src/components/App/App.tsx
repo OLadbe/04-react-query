@@ -25,7 +25,7 @@ function App() {
   const [page, setPage] = useState<number>(1);
   const [query, setQuery] = useState<string>('');
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, isSuccess } = useQuery({
     queryKey: ['movies', query, page],
     queryFn: () => fetchMovies(query, page),
     placeholderData: keepPreviousData,
@@ -59,10 +59,10 @@ function App() {
       <SearchBar onSubmit={handleSearch} />
       {isLoading && <Loader />}
       {isError && <ErrorMessage />}
-      {!isLoading && !isError && movies.length > 0 && (<MovieGrid movies={movies} onSelect={handleSelectMovie} />)}
+      {!isLoading && isSuccess && movies.length > 0 && (<MovieGrid movies={movies} onSelect={handleSelectMovie} />)}
       {selectedMovie !== null && (<MovieModal movie={selectedMovie} onClose={closeModal} />)}
       <Toaster position="top-center" reverseOrder={false} />
-      {totalPages > 1 && !isLoading && !isError && (
+      {totalPages > 1 && !isLoading && isSuccess && (
         <ReactPaginate
           pageCount={totalPages}
           pageRangeDisplayed={5}
